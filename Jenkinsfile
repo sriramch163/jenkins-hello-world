@@ -5,7 +5,7 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/YOUR_USERNAME/YOUR_REPO.git'
+                git clone 'https://github.com/sriramch163/jenkins-hello-world.git'
             }
         }
 
