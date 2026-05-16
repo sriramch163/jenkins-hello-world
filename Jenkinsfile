@@ -3,13 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main',
-                url: 'https://github.com/sriramch163/jenkins-hello-world.git'
-            }
-        }
-
         stage('Build') {
             steps {
                 echo 'Building application...'
@@ -25,8 +18,15 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    sudo cp index.html /var/www/html/index.html
+                    mkdir -p deploy
+                    cp index.html deploy/index.html
                 '''
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh 'ls -la deploy'
             }
         }
     }
