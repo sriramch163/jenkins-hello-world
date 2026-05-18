@@ -5,8 +5,8 @@ pipeline {
         BUILD_DIR = "build"
         GIT_REPO_URL = "https://github.com/sriramch163/jenkins-hello-world.git"
 
-        IMAGE_NAME = "hello-world-app"
-        CONTAINER_NAME = "hello-world-container"
+        IMAGE_NAME = "demo-hello-world"
+        CONTAINER_NAME = "demo-hello-world-container"
     }
 
     parameters {
