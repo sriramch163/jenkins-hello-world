@@ -5,10 +5,10 @@ pipeline {
         BUILD_DIR = "build"
         GIT_REPO_URL = "https://github.com/sriramch163/jenkins-hello-world.git"
 
-        IMAGE_NAME = "hello-world-app"
+        IMAGE_NAME = "demo-hello-world"
         IMAGE_TAG = "v1"
 
-        CONTAINER_NAME = "hello-world-container"
+        CONTAINER_NAME = "demo-hello-world-container"
     }
 
     parameters {
@@ -77,7 +77,7 @@ pipeline {
                 sh """
                     docker run -d \
                     --name ${CONTAINER_NAME} \
-                    -p 9000:80 \
+                    -p 9006:80 \
                     ${IMAGE_NAME}:${IMAGE_TAG}
                 """
             }
