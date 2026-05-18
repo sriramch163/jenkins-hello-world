@@ -5,8 +5,10 @@ pipeline {
         BUILD_DIR = "build"
         GIT_REPO_URL = "https://github.com/sriramch163/jenkins-hello-world.git"
 
-        IMAGE_NAME = "demo-hello-world"
-        CONTAINER_NAME = "demo-hello-world-container"
+        IMAGE_NAME = "hello-world-app"
+        IMAGE_TAG = "v1"
+
+        CONTAINER_NAME = "hello-world-container"
     }
 
     parameters {
@@ -49,7 +51,7 @@ pipeline {
             steps {
                 dir("${BUILD_DIR}") {
                     sh """
-                        docker build -t ${IMAGE_NAME}:v1 .
+                        docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
                     """
                 }
             }
@@ -75,8 +77,8 @@ pipeline {
                 sh """
                     docker run -d \
                     --name ${CONTAINER_NAME} \
-                    -p 9005:80 \
-                    ${IMAGE_NAME}:v1
+                    -p 9000:80 \
+                    ${IMAGE_NAME}:${IMAGE_TAG}
                 """
             }
         }
@@ -93,7 +95,32 @@ pipeline {
         }
 
         // -----------------------------------------------------------------------
-        // Stage 7: Push Image To DockerHub
+        // Stage 7: Syft Scan (SBOM Generation)
+        // -----------------------------------------------------------------------
+        stage('Syft Scan') {
+            steps {
+                sh """
+                    syft ${IMAGE_NAME}:${IMAGE_TAG} -o table
+
+                    syft ${IMAGE_NAME}:${IMAGE_TAG} \
+                    -o json > syft-report.json
+                """
+            }
+        }
+
+        // -----------------------------------------------------------------------
+        // Stage 8: Grype Vulnerability Scan
+        // -----------------------------------------------------------------------
+        stage('Grype Scan') {
+            steps {
+                sh """
+                    grype ${IMAGE_NAME}:${IMAGE_TAG}
+                """
+            }
+        }
+
+        // -----------------------------------------------------------------------
+        // Stage 9: Push Image To DockerHub
         // -----------------------------------------------------------------------
         stage('Push Image To DockerHub') {
 
@@ -110,11 +137,11 @@ pipeline {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
-                        docker tag ${IMAGE_NAME}:v1 \
-                        $DOCKER_USER/${IMAGE_NAME}:v1
+                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} \
+                        $DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}
 
                         docker push \
-                        $DOCKER_USER/${IMAGE_NAME}:v1
+                        $DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}
                     '''
                 }
             }
