@@ -75,7 +75,7 @@ pipeline {
                 sh """
                     docker run -d \
                     --name ${CONTAINER_NAME} \
-                    -p 9000:80 \
+                    -p 9005:80 \
                     ${IMAGE_NAME}:v1
                 """
             }
