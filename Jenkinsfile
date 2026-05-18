@@ -110,11 +110,11 @@ pipeline {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
-                        docker tag hello-world-app:v1 \
-                        $DOCKER_USER/hello-world-app:v1
+                        docker tag ${IMAGE_NAME}:v1 \
+                        $DOCKER_USER/${IMAGE_NAME}:v1
 
                         docker push \
-                        $DOCKER_USER/hello-world-app:v1
+                        $DOCKER_USER/${IMAGE_NAME}:v1
                     '''
                 }
             }
