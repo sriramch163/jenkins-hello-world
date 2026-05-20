@@ -122,7 +122,16 @@ pipeline {
         }
 
         // -----------------------------------------------------------------------
-        // Stage 9: Push Image To DockerHub
+        // Stage 9: Archive Security Reports
+        // -----------------------------------------------------------------------
+        stage('Archive Reports') {
+            steps {
+                archiveArtifacts artifacts: '*.json', fingerprint: true
+            }
+        }
+
+        // -----------------------------------------------------------------------
+        // Stage 10: Push Image To DockerHub
         // -----------------------------------------------------------------------
         stage('Push Image To DockerHub') {
 
