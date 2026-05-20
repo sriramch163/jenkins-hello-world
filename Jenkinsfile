@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent { 
+        label 'sriram-lb' 
+    }
 
     environment {
         BUILD_DIR = "build"
